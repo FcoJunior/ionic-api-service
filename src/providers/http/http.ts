@@ -12,49 +12,43 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class HttpProvider {
 
-  protected http: Http;
-  protected headers: Headers;
+  protected _http: Http;
+  protected _headers: Headers;
 
   // API Development
-  protected readonly baseUrl: URL = new URL('https://api.postmon.com.br/v1/cep/');
-
-  // API Production
-  // protected readonly baseUrl: URL = new URL('http://api.clublifetogo.com.br/api');
+  protected readonly BASE_URL: URL = new URL('http://teste.prolins.com.br/clublife/api/');
 
   constructor(http: Http) {
-    this.http = http;
+    this._http = http;
 
     // Configure Headers
-    this.headers = new Headers();
-    this.headers.append('Content-Type', 'application/json');
-    this.headers.append('Authorization', 'Basic QXBwQ2x1YkxpZmU6UyBOcXojfHU0NCttSz5iIURDQCI');
+    this._headers = new Headers();
+    this._headers.append('Content-Type', 'application/json');
+    this._headers.append('Authorization', 'Basic QXBwQ2x1YkxpZmU6UyBOcXojfHU0NCttSz5iIURDQCI');
   }
 
   get(uri: string): Observable<Response> {
-    return this.http
-      .get(this.getEndpoint(uri), { headers: this.headers });
+    return this._http
+      .get(this.getEndpoint(uri), { headers: this._headers });
   }
 
-  post(uri: string, params: any, success: (success: any) => any, error: (error: any) => any):void {
-    this.http
-      .post(this.getEndpoint(uri), JSON.stringify(params), { headers: this.headers })
-      .subscribe(
-        response => success(response.json()), 
-        error => error(error));
+  post(uri: string, params: any): Observable<Response> {
+    return this._http
+      .post(this.getEndpoint(uri), JSON.stringify(params), { headers: this._headers });
   }
 
   put(uri: string, params: any): Observable<Response> {
-    return this.http
-      .post(this.getEndpoint(uri), JSON.stringify(params), { headers: this.headers });
+    return this._http
+      .post(this.getEndpoint(uri), JSON.stringify(params), { headers: this._headers });
   }
 
   delete(uri: string, params: any): Observable<Response> {
-    return this.http
-      .post(this.getEndpoint(uri), JSON.stringify(params), { headers: this.headers });
+    return this._http
+      .post(this.getEndpoint(uri), JSON.stringify(params), { headers: this._headers });
   }
 
   private getEndpoint(path): string {
-    return this.baseUrl + path;
+    return this.BASE_URL + path;
   }
 
 }

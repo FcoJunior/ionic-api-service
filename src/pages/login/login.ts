@@ -1,3 +1,4 @@
+import { StorageProvider } from './../../providers/storage/storage';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpProvider } from './../../providers/http/http';
@@ -18,10 +19,12 @@ export class LoginPage {
 
   public username: string;
   public password: string;
-  httpService: HttpProvider;
+  private _httpService: HttpProvider;
+  private _storage: StorageProvider;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, httpService: HttpProvider) {
-    this.httpService = httpService
+  constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpProvider) {
+    this._httpService = httpService;
+    this._storage = new StorageProvider();
   }
 
   ionViewDidLoad() {
@@ -29,19 +32,17 @@ export class LoginPage {
   }
 
   login():void {
-    this.httpService.get('60731455').subscribe(res => {console.log(res)});
-  //   this.httpService
-  //     .post('/login', 
-  //     { 
-  //       cpfCnpj: "05775040376", 
-  //       senha: "12345" 
-  //     }, 
-  //     success => {
-  //       console.log(success);
-  //     }, 
-  //     error => {
-  //       console.log(error);
-  //     });
+    this.httpService
+      .post('/login', 
+      { 
+        cpfCnpj: "05775040376", 
+        senha: "12345" 
+      })
+      .subscribe(response => {
+        this._storage.setIdentify(response.json());
+      }, fail => {
+
+      });
    }
 
 }
