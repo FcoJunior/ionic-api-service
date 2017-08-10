@@ -19,4 +19,11 @@ export class StorageProvider {
     localStorage.setItem('INNOVARO_ID', object.Id);
   }
 
+  public isLogged(): boolean {
+    if (localStorage.getItem('PROLINS_ID')) {
+      return true;
+    }
+    return false;
+  }
+
 }

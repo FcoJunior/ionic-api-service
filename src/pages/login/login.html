@@ -11,7 +11,15 @@
 
 <ion-content padding>
   <h2 ion-text text-center>Login</h2>
-  <input type="text" [(ngModel)]="username" placeholder="CPF ou CNPJ">
-  <input type="password" [(ngModel)]="password" placeholder="Senha">
-  <button ion-button (click)="login()">Login</button>
+  <form (submit)="login(formData)">
+    <ion-row justify-content-center>
+      <input type="text" name="username" [(ngModel)]="formData.cpfCnpj" placeholder="CPF ou CNPJ" required>
+    </ion-row>
+    <ion-row justify-content-center>
+      <input type="password" name="password" [(ngModel)]="formData.senha" placeholder="Senha" required>
+    </ion-row>
+    <ion-row justify-content-center>
+      <button ion-button type="submit">Login</button>
+    </ion-row>
+  </form>
 </ion-content>
