@@ -1,4 +1,3 @@
-import { StorePage } from './../pages/store/store';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -10,6 +9,9 @@ import { FormsModule } from "@angular/forms";
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from './../pages/login/login';
+import { StorePage } from './../pages/store/store';
+import { ProductPage } from './../pages/product/product';
+import { ProductDetailPage } from './../pages/product-detail/product-detail';
 
 import { HttpProvider } from '../providers/http/http';
 import { StorageProvider } from '../providers/storage/storage';
@@ -19,7 +21,9 @@ import { StorageProvider } from '../providers/storage/storage';
     MyApp,
     HomePage,
     LoginPage,
-    StorePage
+    StorePage,
+    ProductPage,
+    ProductDetailPage
   ],
   imports: [
     BrowserModule,
@@ -32,7 +36,9 @@ import { StorageProvider } from '../providers/storage/storage';
     MyApp,
     HomePage,
     LoginPage,
-    StorePage
+    StorePage,
+    ProductPage,
+    ProductDetailPage
   ],
   providers: [
     StatusBar,

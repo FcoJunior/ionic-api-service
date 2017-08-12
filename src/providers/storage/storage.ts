@@ -26,4 +26,20 @@ export class StorageProvider {
     return false;
   }
 
+  public setStoreId(id: number) {
+    localStorage.setItem('STORE_ID', id.toString());
+  }
+
+  public getStoreId(): string {
+    return localStorage.getItem('STORE_ID');
+  }
+
+  public setStoreUrl(url: string) {
+    localStorage.setItem('STORE_URL', url);
+  }
+
+  public getStoreUrl(): string {
+    return localStorage.getItem('STORE_URL');
+  }
+
 }
