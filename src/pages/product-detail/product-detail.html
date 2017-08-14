@@ -9,13 +9,17 @@
   <ion-navbar>
     <ion-title>{{ product.nome }}</ion-title>
   </ion-navbar>
-
+  
 </ion-header>
 
 
 <ion-content padding>
-  <h1 ion-text>{{ product.nome }}</h1>
-  <p>{{ product.descricaoProdApp }}</p>
 
-  <button ion-button full>Adicionar a cesta</button>
+  <h1 ion-text>{{ product.nome }}</h1>
+  <p *ngIf="product.descricaoProdApp">{{ product.descricaoProdApp }}</p>
+
+  <h4>{{ quantity }}</h4>
+  <button ion-button (click)="increaseQuantity()">Add</button>
+  <button ion-button (click)="reduceQuantity()">Remove</button>  
+  <button ion-button full (click)="addToCart()">Adicionar a cesta</button>
 </ion-content>

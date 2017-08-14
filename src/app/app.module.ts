@@ -1,10 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from "@angular/forms";
+
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { SQLite } from '@ionic-native/sqlite';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -12,9 +14,12 @@ import { LoginPage } from './../pages/login/login';
 import { StorePage } from './../pages/store/store';
 import { ProductPage } from './../pages/product/product';
 import { ProductDetailPage } from './../pages/product-detail/product-detail';
+import { BasketPage } from './../pages/basket/basket';
 
-import { HttpProvider } from '../providers/http/http';
+import { HttpService } from '../providers/http/http.service';
 import { StorageProvider } from '../providers/storage/storage';
+import { SqliteHelperService } from './../providers/sqlite-helper/sqlite-helper.service';
+import { BasketService } from '../providers/basket/basket.service';
 
 @NgModule({
   declarations: [
@@ -23,7 +28,8 @@ import { StorageProvider } from '../providers/storage/storage';
     LoginPage,
     StorePage,
     ProductPage,
-    ProductDetailPage
+    ProductDetailPage,
+    BasketPage
   ],
   imports: [
     BrowserModule,
@@ -38,14 +44,18 @@ import { StorageProvider } from '../providers/storage/storage';
     LoginPage,
     StorePage,
     ProductPage,
-    ProductDetailPage
+    ProductDetailPage,
+    BasketPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    HttpProvider,
-    StorageProvider
+    StorageProvider,
+    SQLite,
+    HttpService,
+    SqliteHelperService,
+    BasketService
   ]
 })
 export class AppModule {}

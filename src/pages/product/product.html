@@ -8,6 +8,11 @@
 
   <ion-navbar>
     <ion-title>{{store.nome}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToCart()">
+        <ion-icon name="basket"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>

@@ -1,10 +1,14 @@
-import { ProductDetailPage } from './../product-detail/product-detail';
-import { Product } from './../../model/base/product';
-import { StorageProvider } from './../../providers/storage/storage';
-import { HttpProvider } from './../../providers/http/http';
-import { Store } from './../../model/base/store';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
+
+import { BasketPage } from './../basket/basket';
+import { ProductDetailPage } from './../product-detail/product-detail';
+
+import { HttpService } from './../../providers/http/http.service';
+import { StorageProvider } from './../../providers/storage/storage';
+
+import { Store } from './../../model/base/store.model';
+import { Product } from './../../model/base/product.model';
 
 /**
  * Generated class for the ProductPage page.
@@ -21,37 +25,62 @@ import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-an
 export class ProductPage {
 
   public products: Product[];
-  public store: Store;
-  private _httpService: HttpProvider;
+  public store: Store = new Store();
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    private loading: LoadingController,
-    private storage: StorageProvider,
-    private httpService: HttpProvider
-    ) {
+    private _loading: LoadingController,
+    private _storage: StorageProvider,
+    private _alertCtrl: AlertController,
+    private _httpService: HttpService
+  ) { }
 
-    this._httpService = httpService;
+  ionViewDidLoad() {
+    // Get store selected.
     this.store = this.navParams.data;
-
-    let loader = loading.create({
+    
+    // Create page loading.
+    let loader = this._loading.create({
       content: 'Buscando produtos'
     });
     loader.present();
 
-    let storeId = storage.getStoreId();
+    // Capture for products with store id.
     this._httpService
-      .get(`/store/getproducts/${storeId}`, storage.getStoreUrl())
+      .get(`/store/getproducts/${this._storage.getStoreId()}`, this._storage.getStoreUrl())
       .subscribe(response => {
         loader.dismiss();
         this.products = response.json() as Product[];
       }, fail => {
         loader.dismiss();
-      })
+    });
   }
 
+  /**
+   * Method for show product detail if it exists in stock.
+   * @param product 
+   */
   public showDetails(product: Product) {
+    if(product.quantidade < 1) {
+      // Show alert if product not have stock.
+      let alert = this._alertCtrl.create({
+          title: 'Produto em falta!',
+          subTitle: 'O produto está sem estoque no momento.',
+          buttons: ['Ok']
+        });
+        // Call alert.
+        alert.present();
+      return
+    }
+    // Show details of product.
     this.navCtrl.push(ProductDetailPage, product);
+  }
+
+  /**
+   * Call basket page.
+   */
+  public goToCart(): void {
+    this.navCtrl.push(BasketPage);
   }
 }

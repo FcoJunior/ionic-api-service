@@ -1,8 +1,10 @@
-import { StorePage } from './../store/store';
-import { StorageProvider } from './../../providers/storage/storage';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
-import { HttpProvider } from './../../providers/http/http';
+
+import { HttpService } from './../../providers/http/http.service';
+import { StorageProvider } from './../../providers/storage/storage';
+
+import { StorePage } from './../store/store';
 
 /**
  * Generated class for the LoginPage page.
@@ -19,22 +21,21 @@ import { HttpProvider } from './../../providers/http/http';
 export class LoginPage {
 
   public formData: Object = new Object();
-  private _httpService: HttpProvider;
   private _storage: StorageProvider;
-  private _loadingCtrl: LoadingController;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpProvider, private loadingCtrl: LoadingController) {
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    private _httpService: HttpService, 
+    private _loadingCtrl: LoadingController
+  ) { }
+
+  ionViewDidLoad() {
     this._storage = new StorageProvider();
-    this._loadingCtrl = loadingCtrl;
+
     if (this._storage.isLogged()) {
       this.navCtrl.push(StorePage);
     };
-    
-    this._httpService = httpService;
-  }
-
-  ionViewDidLoad() {
-
   }
 
   login(data: Object):void {
@@ -44,7 +45,7 @@ export class LoginPage {
 
     loader.present();
 
-    this.httpService
+    this._httpService
       .post('/login', data)
       .subscribe(response => {
         loader.dismiss();

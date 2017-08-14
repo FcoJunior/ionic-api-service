@@ -1,4 +1,4 @@
-import { Operation } from './operation';
+import { Operation } from './operation.model';
 
 export class Store {
     id: number;

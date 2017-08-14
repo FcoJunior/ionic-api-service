@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
   for more info on providers and Angular DI.
 */
 @Injectable()
-export class HttpProvider {
+export class HttpService {
 
   protected _http: Http;
 

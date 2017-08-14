@@ -1,7 +1,7 @@
 import { ProductPage } from './../product/product';
-import { Store } from './../../model/base/store';
+import { Store } from './../../model/base/store.model';
 import { StorageProvider } from './../../providers/storage/storage';
-import { HttpProvider } from './../../providers/http/http';
+import { HttpService } from './../../providers/http/http.service';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 
@@ -20,42 +20,39 @@ import { IonicPage, NavController, NavParams, LoadingController, AlertController
 export class StorePage {
 
   public stores: Store[];
-  private _httpService: HttpProvider;
   private _storage: StorageProvider;
-  private _alertCtrl: AlertController;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
-    private httpService: HttpProvider, 
-    private loading: LoadingController,
-    private alertCtrl: AlertController
-  ) {
+    private _httpService: HttpService, 
+    private _loading: LoadingController,
+    private _alertCtrl: AlertController
+  ) { }
 
-    this._httpService = httpService;
-    this._alertCtrl = alertCtrl;
-
-    let loader = loading.create({
+  ionViewDidLoad() {
+    // Create loading page.
+    let loader = this._loading.create({
       content: 'Buscando lojas'
     });
-
     loader.present();
 
+    // Capture stores.
     this._httpService
       .get("/store")
       .subscribe(data => {
         this.stores = data.json() as Store[];
         loader.dismiss();
-      });
+    });
   }
 
-  ionViewDidLoad() {
-
-  }
-
+  /**
+   * Call store page.
+   */
   public goStore(store: Store) {
-    // verifica se a loja possui endpoint para o serviço
+    // Check if store have endpoint to web service.
     if (!store.enderecoServidor) {
+      // If not, show message alert.
       let alert = this._alertCtrl.create({
         title: 'Loja em construção',
         subTitle: 'Em breve mais uma loja da Club Life estará disponível!',
@@ -65,9 +62,12 @@ export class StorePage {
       return
     }
 
+    // Save on local storage storeId and endpoint to server.
     let storage = new StorageProvider();
     storage.setStoreId(store.id);
     storage.setStoreUrl(store.enderecoServidor);
+
+    // Navigation to page of products list.
     this.navCtrl.push(ProductPage, store);
   }
 
