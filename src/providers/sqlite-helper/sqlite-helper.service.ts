@@ -33,7 +33,7 @@ export class SqliteHelperService {
               quantidade INTEGER NOT NULL,
               unitario REAL NOT NULL,
               nome TEXT NOT NULL,
-              descricao TEXT NOT NULL
+              descricao TEXT
             )`, {})
             .then(success => {
               console.log('Table created successfull!', success);

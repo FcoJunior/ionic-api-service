@@ -32,7 +32,7 @@ export class BasketService {
 
             return list;
           })
-      })
+      });
   }
 
   public create(item: BasketItem): Promise<BasketItem> {
@@ -55,5 +55,58 @@ export class BasketService {
             return item;
           });
       })
+  }
+
+  public getItemById(id: number): Promise<BasketItem> {
+    return this.sqliteHelperService
+      .getContext()
+      .then((context: SQLiteObject) => {
+        return <Promise<BasketItem>>context.executeSql(`SELECT * FROM basket WHERE id = ${id}`, {})
+          .then(data => {
+            console.log('Produto pegue por id');
+            return data;
+          }).catch((error: Error) => {
+            console.log(error.message);
+          });
+      });
+  }
+
+  public updateQuantity(id: number, quantity: number): void {
+    this.sqliteHelperService
+      .getContext()
+      .then((context: SQLiteObject) => {
+        context.executeSql(`UPDATE basket SET quantidade = ${quantity} WHERE id = ${id}`, {})
+          .then(data => {
+            console.log('Objeto atualizado');
+          }).catch((error: Error) => {
+            console.log(error);
+          });
+      });
+  }
+
+  public destroy(): void {
+    this.sqliteHelperService
+      .getContext()
+      .then((context: SQLiteObject) => {
+        context.executeSql('DELETE FROM basket', {})
+          .then(data => {
+            console.log('Dados deletados');
+          }).catch((error: Error) => {
+            console.log(error.message);
+          });
+      });
+  }
+
+  public destroyById(id: number): void {
+    this.sqliteHelperService
+      .getContext()
+      .then((context: SQLiteObject) => {
+        context.executeSql(`DELETE FROM basket WHERE id = ${id}`, {})
+          .then(data => {
+            console.log('registro removido: ', id);
+          }).catch((error: Error) => {
+            console.log(error.message);
+          });
+      });
   }
 }
