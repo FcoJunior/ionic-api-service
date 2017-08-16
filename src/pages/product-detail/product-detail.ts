@@ -40,19 +40,20 @@ export class ProductDetailPage {
    */
   public addToCart(): void {
     // Create a object BasketItem for add to cart.
-    let item = this.createBasketItem(this.product);
+    let item = this._createBasketItem(this.product);
 
-    // Call instance BasketService to insert product in SQLite.
-    this._basketDao.create(item)
-      .then(data => {
-        // Create a message for success.
-        let alert = this._alertCtrl.create({
-          title: 'Produto adicionado a cesta!',
-          subTitle: `O produto ${data.nome} foi adicionado a sua cesta!`,
-          buttons: ['Ok']
-        });
-        // Call alert.
-        alert.present();
+    this._basketDao.getItemById(this.product.id)
+      .then((data: BasketItem) => {
+        // Check if item exists in database
+        console.log(data);
+        if (!data) {
+          // create item on database
+          this._insertbasketItem(item);
+          return
+        }
+
+        // update
+        this._alterQuantityBasketItem(data);
       });
   }
 
@@ -80,7 +81,7 @@ export class ProductDetailPage {
    * Method for generate a instance BasketItem.
    * @param product 
    */
-  private createBasketItem(product: Product): BasketItem {
+  private _createBasketItem(product: Product): BasketItem {
     let item = new BasketItem();
     item.id = product.id;
     item.descricao = product.descricaoProdApp;
@@ -89,6 +90,58 @@ export class ProductDetailPage {
     item.unitario = product.precoUnitario;
 
     return item;
+  }
+
+  /**
+   * Method for insert item in database
+   * @param item 
+   */
+  private _insertbasketItem(item: BasketItem): void {
+    // Call instance BasketService to insert product in SQLite.
+    this._basketDao.create(item)
+      .then(data => {
+        // show alert successful
+        this._showAlertProductAdd(data.nome);
+      }).catch((error: Error) => {
+        console.log('erro aou fazer insert', error.message);
+      });
+  }
+
+  /**
+   * Method for update quantity product in database
+   * @param item 
+   */
+  private _alterQuantityBasketItem(item: BasketItem): void {
+    this._basketDao
+      // Update quantity
+      .updateQuantity(item.id, item.quantidade + this.quantity)
+      .then(data => {
+        // Call alert successful
+        this._showAlertProductAdd(data.nome);
+      }).catch((error: Error) => {
+        console.log('erro aou fazer update', error.message);
+      })
+  }
+
+  /**
+   * Show a successful alert.
+   * @param productName 
+   */
+  private _showAlertProductAdd(productName: string): void {
+    // Create a message for success.
+    let alert = this._alertCtrl.create({
+      title: 'Produto adicionado a cesta!',
+      subTitle: `O produto ${productName} foi adicionado a sua cesta!`,
+      buttons: [{
+        text: 'Ok',
+        handler: () => {
+          // Return to products listing to press 'Ok' button.
+          this.navCtrl.pop();
+        }
+      }]
+    });
+    // Call alert.
+    alert.present();
   }
 
 }

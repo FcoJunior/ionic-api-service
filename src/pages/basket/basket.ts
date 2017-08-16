@@ -27,19 +27,25 @@ export class BasketPage {
   ) { }
 
   ionViewDidLoad() {
+    // Check if there is any product in the basket.
     this._basketDao
       .getAll()
       .then(data => {
         if (data.length < 1) {
-          this.callNoItemsAlert();
+          // If the cart is empty, it will display a message that will redirect you to the product listing.
+          this._callNoItemsAlert();
           return
         }
 
+        // Receives the item from the basket.
         this.basketItems = data;
     });    
   }
 
-  private callNoItemsAlert(): void {
+  /**
+   * Method that displays an alert stating that the basket is empty.
+   */
+  private _callNoItemsAlert(): void {
     let alert = this._alertCtrl.create({
       title: 'Sua cesta está vazia',
       message: 'Adicione itens a sua cesta!',

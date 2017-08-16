@@ -62,48 +62,51 @@ export class BasketService {
       .getContext()
       .then((context: SQLiteObject) => {
         return <Promise<BasketItem>>context.executeSql(`SELECT * FROM basket WHERE id = ${id}`, {})
-          .then(data => {
+          .then(resultSet => {
             console.log('Produto pegue por id');
-            return data;
+            return resultSet.rows.item(0);
           }).catch((error: Error) => {
             console.log(error.message);
           });
       });
   }
 
-  public updateQuantity(id: number, quantity: number): void {
-    this.sqliteHelperService
+  public updateQuantity(id: number, quantity: number): Promise<BasketItem> {
+    return this.sqliteHelperService
       .getContext()
       .then((context: SQLiteObject) => {
-        context.executeSql(`UPDATE basket SET quantidade = ${quantity} WHERE id = ${id}`, {})
-          .then(data => {
+        return <Promise<BasketItem>>context.executeSql(`UPDATE basket SET quantidade = ${quantity} WHERE id = ${id}`, {})
+          .then(resultSet => {
             console.log('Objeto atualizado');
+            return resultSet;
           }).catch((error: Error) => {
             console.log(error);
           });
       });
   }
 
-  public destroy(): void {
-    this.sqliteHelperService
+  public destroy(): Promise<BasketItem> {
+    return this.sqliteHelperService
       .getContext()
       .then((context: SQLiteObject) => {
-        context.executeSql('DELETE FROM basket', {})
-          .then(data => {
+        return <Promise<BasketItem>>context.executeSql('DELETE FROM basket', {})
+          .then(resultSet => {
             console.log('Dados deletados');
+            return resultSet;
           }).catch((error: Error) => {
             console.log(error.message);
           });
       });
   }
 
-  public destroyById(id: number): void {
-    this.sqliteHelperService
+  public destroyById(id: number): Promise<BasketItem> {
+    return this.sqliteHelperService
       .getContext()
       .then((context: SQLiteObject) => {
-        context.executeSql(`DELETE FROM basket WHERE id = ${id}`, {})
+        return <Promise<BasketItem>>context.executeSql(`DELETE FROM basket WHERE id = ${id}`, {})
           .then(data => {
             console.log('registro removido: ', id);
+            return data;
           }).catch((error: Error) => {
             console.log(error.message);
           });
