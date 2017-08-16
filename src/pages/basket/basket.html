@@ -14,5 +14,11 @@
 
 
 <ion-content padding>
-
+  <ion-item *ngFor="let item of basketItems; let i = index;">
+    <h3>{{ item.nome }}</h3>
+    <h4>{{ item.quantidade }}</h4>
+    <button ion-button (click)="addQuantity(i, item.id)">+</button>
+    <button ion-button (click)="removeQuantity(i, item.id)">-</button>
+    <button ion-button (click)="removeItem(i, item.id)">remover</button>
+  </ion-item>
 </ion-content>

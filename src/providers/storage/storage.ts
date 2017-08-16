@@ -42,4 +42,16 @@ export class StorageProvider {
     return localStorage.getItem('STORE_URL');
   }
 
+  public setStoreCNPJ(cnpj: string): void {
+    localStorage.setItem('STORE_CNPJ', cnpj);
+  }
+
+  public getStoreCNPJ(): string {
+    return localStorage.getItem('STORE_CNPJ');
+  }
+
+  public getProlinsId() {
+    return localStorage.getItem('PROLINS_ID');
+  }
+
 }

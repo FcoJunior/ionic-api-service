@@ -65,6 +65,7 @@ export class StorePage {
     // Save on local storage storeId and endpoint to server.
     let storage = new StorageProvider();
     storage.setStoreId(store.id);
+    storage.setStoreCNPJ(store.cnpj.replace(/[\.\-\/]/g, ''));
     storage.setStoreUrl(store.enderecoServidor);
 
     // Navigation to page of products list.
