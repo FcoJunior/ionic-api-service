@@ -1,6 +1,6 @@
 import { ProductPage } from './../product/product';
 import { Store } from './../../model/base/store.model';
-import { StorageProvider } from './../../providers/storage/storage';
+import { StorageService } from './../../providers/storage/storage.service';
 import { HttpService } from './../../providers/http/http.service';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
@@ -20,14 +20,14 @@ import { IonicPage, NavController, NavParams, LoadingController, AlertController
 export class StorePage {
 
   public stores: Store[];
-  private _storage: StorageProvider;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
     private _httpService: HttpService, 
     private _loading: LoadingController,
-    private _alertCtrl: AlertController
+    private _alertCtrl: AlertController,
+    private _storage: StorageService
   ) { }
 
   ionViewDidLoad() {
@@ -43,6 +43,8 @@ export class StorePage {
       .subscribe(data => {
         this.stores = data.json() as Store[];
         loader.dismiss();
+    }, () => {
+      loader.dismiss();
     });
   }
 
@@ -63,10 +65,9 @@ export class StorePage {
     }
 
     // Save on local storage storeId and endpoint to server.
-    let storage = new StorageProvider();
-    storage.setStoreId(store.id);
-    storage.setStoreCNPJ(store.cnpj.replace(/[\.\-\/]/g, ''));
-    storage.setStoreUrl(store.enderecoServidor);
+    this._storage.setStoreId(store.id);
+    this._storage.setStoreCNPJ(store.cnpj.replace(/[\.\-\/]/g, ''));
+    this._storage.setStoreUrl(store.enderecoServidor);
 
     // Navigation to page of products list.
     this.navCtrl.push(ProductPage, store);

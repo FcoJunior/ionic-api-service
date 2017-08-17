@@ -21,4 +21,15 @@
     <button ion-button (click)="removeQuantity(i, item.id)">-</button>
     <button ion-button (click)="removeItem(i, item.id)">remover</button>
   </ion-item>
+  <ion-row>
+    Subtotal: {{ subtotal }}
+  </ion-row>
+  <ion-row>
+    Delivery:
+    <button ion-button (click)="selectOtherAddress()">Alterar</button>
+    {{ addressDelivery.nomeEndereco }} / {{ messageOrValue }}
+  </ion-row>
+  <ion-row>
+    Total: {{ total }}
+  </ion-row>
 </ion-content>

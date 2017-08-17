@@ -15,9 +15,10 @@ import { StorePage } from './../pages/store/store';
 import { ProductPage } from './../pages/product/product';
 import { ProductDetailPage } from './../pages/product-detail/product-detail';
 import { BasketPage } from './../pages/basket/basket';
+import { DeliverySelectPage } from './../pages/delivery-select/delivery-select';
 
 import { HttpService } from '../providers/http/http.service';
-import { StorageProvider } from '../providers/storage/storage';
+import { StorageService } from '../providers/storage/storage.service';
 import { SqliteHelperService } from './../providers/sqlite-helper/sqlite-helper.service';
 import { BasketService } from '../providers/basket/basket.service';
 
@@ -29,7 +30,8 @@ import { BasketService } from '../providers/basket/basket.service';
     StorePage,
     ProductPage,
     ProductDetailPage,
-    BasketPage
+    BasketPage,
+    DeliverySelectPage
   ],
   imports: [
     BrowserModule,
@@ -45,13 +47,14 @@ import { BasketService } from '../providers/basket/basket.service';
     StorePage,
     ProductPage,
     ProductDetailPage,
-    BasketPage
+    BasketPage,
+    DeliverySelectPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    StorageProvider,
+    StorageService,
     SQLite,
     HttpService,
     SqliteHelperService,

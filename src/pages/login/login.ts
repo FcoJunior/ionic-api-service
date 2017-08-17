@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 
 import { HttpService } from './../../providers/http/http.service';
-import { StorageProvider } from './../../providers/storage/storage';
+import { StorageService } from './../../providers/storage/storage.service';
 
 import { StorePage } from './../store/store';
 
@@ -21,18 +21,16 @@ import { StorePage } from './../store/store';
 export class LoginPage {
 
   public formData: Object = new Object();
-  private _storage: StorageProvider;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
     private _httpService: HttpService, 
-    private _loadingCtrl: LoadingController
+    private _loadingCtrl: LoadingController,
+    private _storage: StorageService
   ) { }
 
   ionViewDidLoad() {
-    this._storage = new StorageProvider();
-
     if (this._storage.isLogged()) {
       this.navCtrl.push(StorePage);
     };

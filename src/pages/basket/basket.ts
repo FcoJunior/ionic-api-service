@@ -1,9 +1,12 @@
+import { DeliverySelectPage } from './../delivery-select/delivery-select';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController, ModalController } from 'ionic-angular';
 
 import { HttpService } from './../../providers/http/http.service';
 import { BasketService } from './../../providers/basket/basket.service';
-import { StorageProvider } from './../../providers/storage/storage';
+import { StorageService } from './../../providers/storage/storage.service';
+
+import { IBasket } from './../../delegate/ibasket';
 
 import { Address } from './../../model/base/address.model';
 import { BasketItem } from './../../model/base/basket-item.model';
@@ -20,11 +23,18 @@ import { BasketItem } from './../../model/base/basket-item.model';
   selector: 'page-basket',
   templateUrl: 'basket.html',
 })
-export class BasketPage {
+export class BasketPage implements IBasket {
+  
+  reloadTaxeDelivery(id: number) {
+    this._getDelivery(id);
+  }
 
-  public basketItems: BasketItem[];
+  public basketItems: BasketItem[] = [];
   public addressDelivery: Address = new Address();
-  public taxe: number = 0;
+  public messageOrValue: string = '';
+  public subtotal: string = '';
+  public total: string = '';
+  private _taxe: number = 0;
 
   constructor(
     public navCtrl: NavController, 
@@ -33,7 +43,8 @@ export class BasketPage {
     private _loadingCtrl: LoadingController,
     private _basketDao: BasketService,
     private _httpService: HttpService,
-    private _storage: StorageProvider
+    private _storage: StorageService,
+    private _modalCtrl: ModalController
   ) { }
 
   ionViewDidLoad() {
@@ -49,9 +60,11 @@ export class BasketPage {
 
         // Receives the item from the basket.
         this.basketItems = data;
+        this._updateDisplaySubtotal();
+        this._updateDisplayTotal();
+
+        this._getDelivery();
     });
-      
-    this._getDelivery();
   }
 
   /**
@@ -64,8 +77,10 @@ export class BasketPage {
       .then(data => {
         // Remove item on display array
         this.basketItems.splice(index, 1);
+        this._updateDisplaySubtotal();
+        this._updateDisplayTotal();
         console.log('Item removido', data);
-        
+        this.subtotal = `${this._calculateSubTotal()}`;
         // If array length = 0, call no tiems alert.
         if (this.basketItems.length === 0) {
           this._callNoItemsAlert();
@@ -88,6 +103,8 @@ export class BasketPage {
       .updateQuantity(id, item.quantidade)
       .then(data => {
         console.log('item alterado.', data);
+        this._updateDisplaySubtotal();
+        this._updateDisplayTotal();
     });
   }
 
@@ -106,6 +123,8 @@ export class BasketPage {
         .updateQuantity(id, item.quantidade)
         .then(data => {
           console.log('item alterado.', data);
+          this._updateDisplaySubtotal();
+          this._updateDisplayTotal();
       });
     }
   }
@@ -147,7 +166,7 @@ export class BasketPage {
    * Method calculates the total
    */
   private _calculateTotal(): number {
-    return this.taxe + this._calculateSubTotal();
+    return this._taxe + this._calculateSubTotal();
   }
 
   /**
@@ -156,17 +175,22 @@ export class BasketPage {
    */
   private _getDelivery(address: number = 0): void {
     let loader = this._loadingCtrl.create({
-      content: 'Buscando endereço de entrega'
+      content: 'Calculando taxa de entrega.'
     });
     loader.present();
 
+    // Get taxe delivery request
     this._httpService
       .get(`/delivery?cnpj=${this._storage.getStoreCNPJ()}&prolinsId=${this._storage.getProlinsId()}&addressId=${address}`)
       .subscribe(data => {
         loader.dismiss();
+        // Get object
         let response = data.json();
+        // Casting to Address object
         this.addressDelivery = response.endereco as Address;
         if (response.message) {
+          this.messageOrValue = 'Indisponível';
+          this._taxe = 0;
           //alert
           let alert = this._alertCtrl
             .create({
@@ -176,8 +200,30 @@ export class BasketPage {
             });
             alert.present();
         } else {
-          this.taxe = response.valor;
+          this._taxe = response.valor;
+          this.messageOrValue = response.valor;
         }
+
+        this._updateDisplayTotal();
       })
+  }
+
+  /**
+   * Method for show display subtotal value
+   */
+  private _updateDisplaySubtotal(): void {
+    this.subtotal = `${this._calculateSubTotal()}`;
+  }
+
+  /**
+   * Method for show display total value
+   */
+  private _updateDisplayTotal(): void {
+    this.total = `${this._calculateTotal()}`;
+  }
+
+  public selectOtherAddress(): void {
+    this._modalCtrl.create(DeliverySelectPage, this)
+      .present();
   }
 }

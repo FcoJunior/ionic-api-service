@@ -5,7 +5,7 @@ import { BasketPage } from './../basket/basket';
 import { ProductDetailPage } from './../product-detail/product-detail';
 
 import { HttpService } from './../../providers/http/http.service';
-import { StorageProvider } from './../../providers/storage/storage';
+import { StorageService } from './../../providers/storage/storage.service';
 
 import { Store } from './../../model/base/store.model';
 import { Product } from './../../model/base/product.model';
@@ -31,7 +31,7 @@ export class ProductPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     private _loading: LoadingController,
-    private _storage: StorageProvider,
+    private _storage: StorageService,
     private _alertCtrl: AlertController,
     private _httpService: HttpService
   ) { }
