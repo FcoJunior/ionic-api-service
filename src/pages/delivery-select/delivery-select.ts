@@ -1,3 +1,4 @@
+import { CreateAddressPage } from './../create-address/create-address';
 import { IBasket } from './../../delegate/ibasket';
 import { Address } from './../../model/base/address.model';
 import { StorageService } from './../../providers/storage/storage.service';
@@ -43,7 +44,6 @@ export class DeliverySelectPage {
       .get(`/address/getByCustomer?customerId=${this._storageService.getProlinsId()}`)
       .subscribe(data => {
         loader.dismiss();
-        console.log('endereços: ', data);
         this.address = data.json() as Address[];
       }, () => {
         loader.dismiss();
@@ -58,6 +58,10 @@ export class DeliverySelectPage {
     this.navCtrl.pop({}, () => {
       this._basketDelegate.reloadTaxeDelivery(id);
     });
+  }
+
+  public addAddress(): void {
+    this.navCtrl.push(CreateAddressPage);
   }
 
 }

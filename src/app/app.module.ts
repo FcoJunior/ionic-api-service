@@ -1,3 +1,4 @@
+import { CreateAddressPage } from './../pages/create-address/create-address';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -21,6 +22,7 @@ import { HttpService } from '../providers/http/http.service';
 import { StorageService } from '../providers/storage/storage.service';
 import { SqliteHelperService } from './../providers/sqlite-helper/sqlite-helper.service';
 import { BasketService } from '../providers/basket/basket.service';
+import { PostmonService } from '../providers/postmon/postmon.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { BasketService } from '../providers/basket/basket.service';
     ProductPage,
     ProductDetailPage,
     BasketPage,
-    DeliverySelectPage
+    DeliverySelectPage,
+    CreateAddressPage
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import { BasketService } from '../providers/basket/basket.service';
     ProductPage,
     ProductDetailPage,
     BasketPage,
-    DeliverySelectPage
+    DeliverySelectPage,
+    CreateAddressPage
   ],
   providers: [
     StatusBar,
@@ -58,7 +62,8 @@ import { BasketService } from '../providers/basket/basket.service';
     SQLite,
     HttpService,
     SqliteHelperService,
-    BasketService
+    BasketService,
+    PostmonService
   ]
 })
 export class AppModule {}
